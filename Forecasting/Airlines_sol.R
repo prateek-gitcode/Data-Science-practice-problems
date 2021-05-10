@@ -1,0 +1,97 @@
+library(readxl)
+airlines_data <- read_xlsx(file.choose())
+View(airlines_data)
+
+#PreProcessing
+#Creating dummy variables
+x <- data.frame(outer(rep(month.abb,length=96),month.abb,"==")+0)
+colnames(x) <- month.abb
+airlines_passengers <- cbind(airlines_data,x)
+
+#input t
+airlines_passengers["t"] <-cbind(1:96) 
+airlines_passengers["log_Passengers"] <- log(airlines_passengers["Passengers"])
+airlines_passengers["t_square"] <- airlines_passengers["t"]*airlines_passengers["t"]
+
+#PreProcessing Completed
+#Partitioning 
+train_set <- airlines_passengers[1:70,]
+test_set <- airlines_passengers[71:96,]
+
+########################### LINEAR MODEL #############################
+
+
+linear_model <- lm(Passengers ~ t, data = train_set)
+summary(linear_model)
+linear_pred <- data.frame(predict(linear_model, interval='predict', newdata =test_set))
+rmse_linear <- sqrt(mean((test_set$Passengers-linear_pred$fit)^2, na.rm = T))
+rmse_linear
+
+######################### Exponential #################################
+
+expo_model <- lm(log_Passengers ~ t, data = train_set)
+summary(expo_model)
+expo_pred <- data.frame(predict(expo_model, interval='predict', newdata = test_set))
+rmse_expo <- sqrt(mean((test_set$Passengers-exp(expo_pred$fit))^2, na.rm = T))
+rmse_expo
+
+
+######################### Quadratic ####################################
+Quad_model <- lm(Passengers ~ t+t_square, data = train_set)
+summary(Quad_model)
+Quad_pred <- data.frame(predict(Quad_model, interval='predict', newdata = test_set))
+rmse_Quad <- sqrt(mean((test_set$Passengers-Quad_pred$fit)^2, na.rm = T))
+rmse_Quad
+######################### Additive Seasonality #########################
+
+sea_add_model <- lm(Passengers ~ Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov, data = train_set)
+summary(sea_add_model)
+sea_add_pred <- data.frame(predict(sea_add_model, newdata=test_set, interval = 'predict'))
+rmse_sea_add <- sqrt(mean((test_set$Passengers-sea_add_pred$fit)^2, na.rm = T))
+rmse_sea_add
+
+######################## Additive Seasonality with Quadratic #################
+Add_sea_Quad_model <- lm(Passengers ~ t+t_square+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov, data = train_set)
+summary(Add_sea_Quad_model)
+Add_sea_Quad_pred <- data.frame(predict(Add_sea_Quad_model, interval='predict', newdata = test_set))
+rmse_Add_sea_Quad <- sqrt(mean((test_set$Passengers-Add_sea_Quad_pred$fit)^2, na.rm = T))
+rmse_Add_sea_Quad
+
+######################## Multiplicative Seasonality #########################
+
+multi_sea_model <- lm(log_Passengers ~ Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov, data = train_set)
+summary(multi_sea_model)
+multi_sea_pred <- data.frame(predict(multi_sea_model, newdata=test_set, interval='predict'))
+rmse_multi_sea <- sqrt(mean((test_set$Passengers-exp(multi_sea_pred$fit))^2, na.rm = T))
+rmse_multi_sea
+
+
+# Preparing table on model and it's RMSE values 
+
+table_rmse <- data.frame(c("rmse_linear","rmse_expo","rmse_Quad","rmse_sea_add","rmse_Add_sea_Quad","rmse_multi_sea"),c(rmse_linear,rmse_expo,rmse_Quad,rmse_sea_add,rmse_Add_sea_Quad,rmse_multi_sea))
+colnames(table_rmse) <- c("model","RMSE")
+View(table_rmse)
+# Additive seasonality with Quadratic has least RMSE value
+
+############### Combining Training & test data to build Additive seasonality using Quadratic Trend ############
+
+Add_sea_Quad_model_final <- lm(Passengers ~ t+t_square+Jan+Feb+Mar+Apr+May+Jun+Jul+Aug+Sep+Oct+Nov, data = airlines_passengers)
+summary(Add_sea_Quad_model_final)
+
+####################### Predicting new data #############################
+
+pred_new <- data.frame(predict(Add_sea_Quad_model_final,interval='predict',newdata=test_set))
+plot(pred_new)
+acf(Add_sea_Quad_model_final$residuals,lag.max = 10)
+A <- arima(Add_sea_Quad_model_final$residuals,order=c(1,0,0))
+acf(A$residuals,lag.max=10)
+
+A1 <- arima(Add_sea_Quad_model_final$residuals,order=c(4,0,0))
+acf(A1$residuals,lag.max=10)
+
+install.packages('forecast')
+library(forecast)
+errors_12 <- forecast(A1,h=12)
+future_errors <- data.frame(errors_12)$Point.Forecast
+predicted_new_values <- pred_new+future_errors
+

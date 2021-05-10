@@ -1,0 +1,11 @@
+library(readxl)
+dataset= read.csv('Q7.csv')
+attach(dataset)
+summary(Q7)
+sd(Points)
+sd(Score)
+sd(Weigh)
+var(Points)
+var(Score)
+var(Weigh)
+

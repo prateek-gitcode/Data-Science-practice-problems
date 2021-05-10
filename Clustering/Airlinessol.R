@@ -1,0 +1,31 @@
+library(readxl)
+airlines <- read_excel(file.choose(),sheet=2)
+#Kmeans CLustering(storing the k-values)
+normalized_data <- scale(airlines)
+wss=nrow(normalized_data)*sum(apply(normalized_data,2,var))
+for (i in 2:50)
+  wss[i]=sum(kmeans(normalized_data,centers = i)$withinss)
+plot(30:50,wss[30:50],type='b',xlab='No.ofClusters',ylab='Within sum of clusters')
+
+#Applying Kmeans 
+y_kmeans <- kmeans(normalized_data,centers = 40)
+str(y_kmeans)
+cluster <- as.vector( y_kmeans$cluster)
+final <- data.frame(airlines,cluster)
+
+library(data.table)
+setcolorder(final,neworder = c("cluster","Balance"))
+View(final)
+aggregate(final,by=list(cluster),FUN = mean)
+library(cluster)
+clusplot(normalized_data,y_kmeans$cluster)
+
+#Hierarchical Clustering
+dendogram <- hclust(d=dist(normalized_data,method='euclidean'),method = 'complete')
+plot(dendogram,hang=-1)
+hc <- hclust(d=dist(normalized_data,method='euclidean'),method='complete')
+y_hc <- cutree(hc,11)
+final2 <- data.frame(airlines,y_hc)
+rect.hclust(hc, k=11, border="red")
+library(cluster)
+clusplot(normalized_data,y_hc)

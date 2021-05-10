@@ -1,0 +1,53 @@
+;;;;;;	;;;;;;;;;;	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;				
+;;;;						
+;						
+; Opin	ion Lexico	n: Negative				
+;						
+; This file cont	ains a list of NEGATIVE opinion words (or sentiment 					
+words).						
+;						
+; This file and 	the papers can all be downloaded from					
+;    h	ttp://www.	cs.uic.edu/~liub/FBS/	sentiment-analysis.html			
+;						
+; If y	ou use thi	s list, ple	ase cite o	ne of the f	ollowing t	wo papers:
+;						
+;   Mi	nqing Hu a	nd Bing Liu	". ""Mining "	and Summari	zing Custo	"mer Reviews."""
+;     	Proceedi	ngs of the 	ACM SIGKDD	Internatio	nal Confer	ence on 
+Knowledge						
+;     	Discover	y and Data 	Mining (KD	D-2004), Au	g 22-25, 2	004, Seattle,
+;     	Washingt	on, USA,				
+;   Bi	ng Liu, Mi	nqing Hu an	d Junsheng	"Cheng. ""Op"	inion Obse	rver: Analyzing
+;     	and Comp	aring Opini	ons on the	"Web."" Proc"	eedings of	the 14th
+;     	Internat	ional World Wide Web 	conference 	(WWW-2005)	, May 10-14,	
+;     	2005, Ch	iba, Japan.				
+;						
+; Notes:						
+;    1	. The appe	arance of a	n opinion 	word in a s	entence do	es not 
+necess	arily					
+;     	mean tha	t the sente	nce expres	ses a posit	ive or neg	ative opinion.
+;     	See the 	paper below:				
+;						
+;     	Bing Liu	". ""Sentimen"	t Analysis	and Subjec	"tivity."" A"	n chapter in
+;          Handb	ook of Natu	ral Langua	ge Processi	ng, Second	Edition,	
+;          (edit	ors: N. Ind	urkhya and	F. J. Dame	rau), 2010.		
+;						
+;    2	. You will notice man	y misspell	ed words in the list. They are not			
+;     	mistakes	. They are 	included a	s these misspelled words appear		
+;     	frequent	ly in socia	l media co	ntent.		
+;						
+;;;;;;	;;;;;;;;;;	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;				
+;;;;						
+2-faced						
+2-faces						
+abnormal						
+abolish						
+abomin	able					
+abomin	ably					
+abominate						
+abomination						
+abort						
+aborted						
+aborts						
+abrade						
+abrasive						
+abrupt						

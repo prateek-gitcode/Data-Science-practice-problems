@@ -1,0 +1,10 @@
+library(readxl)
+data= read.csv('Q9_a.csv')
+data2= read.csv('Q9_b.csv')
+data3= c(34,36,36,38,38,39,39,40,40,41,41,41,41,42,42,45,49,56)
+data3
+attach(data)
+attach(data2)
+hist(dist)
+hist(speed)
+hist(data3)

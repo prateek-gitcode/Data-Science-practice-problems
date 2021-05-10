@@ -1,0 +1,6 @@
+library(readxl)
+data<- read.csv('Faltoons.csv')
+View(data)
+attach(data)
+table(Weekdays,Weekend)
+prop.test(x=c(66,47),n=c(233,167),conf.level = 0.95,correct = FALSE,alternative = "two.sided")
